@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:teslo_shop/features/auth/presentation/providers/auth_provider.dart';
+import 'package:teslo_shop/features/auth/presentation/providers/register_form_provider.dart';
 import 'package:teslo_shop/features/shared/shared.dart';
 
 
@@ -16,6 +19,7 @@ class RegisterScreen extends StatelessWidget {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: GeometricalBackground( 
           child: SingleChildScrollView(
             physics: const ClampingScrollPhysics(),
@@ -60,11 +64,29 @@ class RegisterScreen extends StatelessWidget {
   }
 }
 
-class _RegisterForm extends StatelessWidget {
+// Consumer widget to riverpod and use providers
+class _RegisterForm extends ConsumerWidget {
+
   const _RegisterForm();
 
+  void showSnackbar( BuildContext context, String message ) {
+    ScaffoldMessenger.of( context ).hideCurrentMaterialBanner();
+    ScaffoldMessenger.of( context ).showSnackBar(
+      SnackBar(content: Text( message ) )
+    );
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref ) {
+
+    // get akk state providers
+    final registerForm = ref.watch( registerFormProvider );
+
+    ref.listen( authProvider, (previous, next) { 
+      if ( next.errorMessage.isEmpty ) return;
+
+      showSnackbar( context, next.errorMessage );
+    });
 
     final textStyles = Theme.of(context).textTheme;
 
@@ -72,32 +94,40 @@ class _RegisterForm extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 50),
       child: Column(
         children: [
-          const SizedBox( height: 50 ),
+          const SizedBox( height: 40 ),
           Text('New account', style: textStyles.titleMedium ),
-          const SizedBox( height: 50 ),
+          const SizedBox( height: 40 ),
 
-          const CustomTextFormField(
+          CustomTextFormField(
             label: 'Full name',
             keyboardType: TextInputType.emailAddress,
+            onChanged: ref.read( registerFormProvider.notifier ).onFullNameChange,
+            errorMessage: registerForm.isFormPosted ? registerForm.fullName.errorMessage : null ,
           ),
           const SizedBox( height: 30 ),
 
-          const CustomTextFormField(
+          CustomTextFormField(
             label: 'Email',
             keyboardType: TextInputType.emailAddress,
+            onChanged: ref.read( registerFormProvider.notifier ).onEmailChange,
+            errorMessage: registerForm.isFormPosted ? registerForm.email.errorMessage : null ,
           ),
           const SizedBox( height: 30 ),
 
-          const CustomTextFormField(
+          CustomTextFormField(
             label: 'Password',
             obscureText: true,
+            onChanged: ref.read( registerFormProvider.notifier ).onPasswordChange,
+            errorMessage: registerForm.isFormPosted ? registerForm.password.errorMessage : null ,
           ),
     
           const SizedBox( height: 30 ),
 
-          const CustomTextFormField(
+          CustomTextFormField(
             label: 'Repeat password',
             obscureText: true,
+            onChanged: ref.read( registerFormProvider.notifier ).onPasswordChange,
+            errorMessage: registerForm.isFormPosted ? registerForm.password.errorMessage : null ,
           ),
     
           const SizedBox( height: 30 ),
@@ -109,7 +139,8 @@ class _RegisterForm extends StatelessWidget {
               text: 'Create',
               buttonColor: Colors.black,
               onPressed: (){
-
+                // to submit our credentials
+                ref.read( registerFormProvider.notifier ).onFormSubmit();
               },
             )
           ),

@@ -1,7 +1,7 @@
 import 'package:formz/formz.dart';
 
 // Define input validation errors
-enum PasswordError { empty, length, format }
+enum PasswordError { empty, length, format, equal }
 
 // Extend FormzInput and provide the input type and error type.
 class Password extends FormzInput<String, PasswordError> {
@@ -24,6 +24,7 @@ class Password extends FormzInput<String, PasswordError> {
     if ( displayError == PasswordError.empty ) return 'This field required';
     if ( displayError == PasswordError.length ) return 'Minimum 6 characters';
     if ( displayError == PasswordError.format ) return 'Must have a capital letter, letters and a number.';
+    if ( displayError == PasswordError.equal ) return 'Is not the same password';
 
     return null;
   }
@@ -36,6 +37,7 @@ class Password extends FormzInput<String, PasswordError> {
     if ( value.isEmpty || value.trim().isEmpty ) return PasswordError.empty;
     if ( value.length < 6 ) return PasswordError.length;
     if ( !passwordRegExp.hasMatch(value) ) return PasswordError.format;
+    if ( value != value ) return PasswordError.equal;
 
     return null;
   }

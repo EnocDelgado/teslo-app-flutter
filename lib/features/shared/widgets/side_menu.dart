@@ -43,7 +43,7 @@ class _SideMenuState extends State<SideMenu> {
 
         Padding(
           padding: EdgeInsets.fromLTRB(20, hasNotch ? 0 : 20, 16, 0),
-          child: Text('Greetings', style: textStyles.titleMedium ),
+          child: Text('Hello', style: textStyles.titleMedium ),
         ),
 
         Padding(

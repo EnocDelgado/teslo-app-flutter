@@ -94,9 +94,11 @@ class _RegisterForm extends ConsumerWidget {
       padding: const EdgeInsets.symmetric(horizontal: 50),
       child: Column(
         children: [
-          const SizedBox( height: 40 ),
+          // const SizedBox( height: 40 ),
+          const Spacer(),
           Text('New account', style: textStyles.titleMedium ),
-          const SizedBox( height: 40 ),
+          // const SizedBox( height: 40 ),
+          const Spacer(),
 
           CustomTextFormField(
             label: 'Full name',

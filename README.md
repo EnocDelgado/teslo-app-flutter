@@ -14,5 +14,5 @@ This is a project to work with:
 [Teslo Backend - Nest RestServer](https://hub.docker.com/repository/docker/klerith/flutter-backend-teslo-shop/general)
 
 # Important
-Remember to read and follow the guide to mount the backend locally.
+On .env change the localhot by your IP direction
 

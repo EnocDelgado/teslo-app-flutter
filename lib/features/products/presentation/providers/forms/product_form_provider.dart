@@ -47,7 +47,7 @@ class ProducFormNotifier extends StateNotifier<ProductFormState> {
 
     if ( !state.isFormValid ) return false;
 
-    if ( onSubmitCallBack == null ) return false;
+    // if ( onSubmitCallBack == null ) return false;
 
     final productLike = {
       "id": state.id,
@@ -93,7 +93,7 @@ class ProducFormNotifier extends StateNotifier<ProductFormState> {
     );
   }
 
-  void onSlughanged( String value ) {
+  void onSlugChanged( String value ) {
     state = state.copyWith(
       slug: Slug.dirty(value),
       isFormValid: Formz.validate([
@@ -129,25 +129,25 @@ class ProducFormNotifier extends StateNotifier<ProductFormState> {
     );
   }
 
-  void onSizeChsnged( List<String> sizes ) {
+  void onSizeChanged( List<String> sizes ) {
     state = state.copyWith(
       sizes: sizes
     );
   }
 
-  void onGenderChnaged( String gender ) {
+  void onGenderChanged( String gender ) {
     state = state.copyWith(
       gender: gender
     );
   }
 
-  void onDescriptionChnaged( String description ) {
+  void onDescriptionChanged( String description ) {
     state = state.copyWith(
       desciption: description
     );
   }
 
-  void onTagsChnaged( String tags ) {
+  void onTagsChanged( String tags ) {
     state = state.copyWith(
       tags: tags
     );

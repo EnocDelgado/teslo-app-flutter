@@ -24,8 +24,8 @@ class Product {
     required this.sizes,
     required this.gender,
     required this.tags,
-    required this.images,
-    required this.user,
+    required this.images, 
+    this.user,
   });
 }
 

@@ -3,6 +3,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:formz/formz.dart';
 import 'package:teslo_shop/features/products/domain/domain.dart';
+import 'package:teslo_shop/features/products/presentation/providers/providers.dart';
 import 'package:teslo_shop/features/shared/infrastructure/inputs/inputs.dart';
 
 import '../../../../../config/constants/environment.dart';
@@ -10,11 +11,11 @@ import '../../../../../config/constants/environment.dart';
 //! 3 - StateNotfifierProvider
 final productFormProvider = StateNotifierProvider.autoDispose.family<ProducFormNotifier, ProductFormState, Product>( ( ref, product ) {
 
-  // Update createUpdateCallback
+  final createUpdateCallback = ref.watch( productsProvider.notifier ).createOrUpdateProduct;
 
   return ProducFormNotifier(
     product: product,
-    // onSubmitCallBack: createUpdateCallback
+    onSubmitCallBack: createUpdateCallback
   );
 });
 
@@ -22,7 +23,7 @@ final productFormProvider = StateNotifierProvider.autoDispose.family<ProducFormN
 //* 2 - Notifier
 class ProducFormNotifier extends StateNotifier<ProductFormState> {
 
-  final void Function( Map<String, dynamic> productLike )? onSubmitCallBack;
+  final Future<bool> Function( Map<String, dynamic> productLike )? onSubmitCallBack;
 
   ProducFormNotifier({
     this.onSubmitCallBack,
@@ -47,10 +48,10 @@ class ProducFormNotifier extends StateNotifier<ProductFormState> {
 
     if ( !state.isFormValid ) return false;
 
-    // if ( onSubmitCallBack == null ) return false;
+    if ( onSubmitCallBack == null ) return false;
 
     final productLike = {
-      "id": state.id,
+      "id": ( state.id == 'new' ) ? null : state.id,
       "title": state.title.value,
       "price": state.price.value,
       "description":state.desciption,
@@ -64,8 +65,14 @@ class ProducFormNotifier extends StateNotifier<ProductFormState> {
       ).toList()
     };
 
-    return true;
-    // invoke submitCallback
+    try {
+
+      return await onSubmitCallBack!( productLike );
+
+    } catch ( error ) {
+
+      return false;
+    }
   }
 
   // To know if field have been toched

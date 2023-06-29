@@ -10,35 +10,51 @@ class ProductScreen extends ConsumerWidget {
 
   const ProductScreen({ super.key, required this.productId });
 
+  void showSnackbar( BuildContext context ) {
+    ScaffoldMessenger.of( context ).clearSnackBars();
+    ScaffoldMessenger.of( context ).showSnackBar(
+      const SnackBar(content: Text('Product Updated') )
+    );
+  }
+
   @override
   Widget build( BuildContext context, WidgetRef ref ) {
 
     final productState = ref.watch( productProvider( productId ) );
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Edit product'),
-        actions: [
-          IconButton(onPressed: () {
-            
-          }, 
-          icon: const Icon( Icons.camera_alt_outlined )
-          )
-        ],
-      ),
-      body: productState.isLoading
-      ? const FullScreenLoader()
-      : _ProductView(product: productState.product! ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: (){
-
-          if ( productState.product == null ) return;
-
-          ref.read( 
-            productFormProvider( productState.product! ).notifier
-          ).onFormSubmit();
-        },
-        child: const Icon( Icons.save_as_outlined ),
+    return GestureDetector(
+      // close keyboard
+      onTap: () => FocusScope.of( context ).unfocus(),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Edit product'),
+          actions: [
+            IconButton(onPressed: () {
+              
+            }, 
+            icon: const Icon( Icons.camera_alt_outlined )
+            )
+          ],
+        ),
+        body: productState.isLoading
+        ? const FullScreenLoader()
+        : _ProductView(product: productState.product! ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: (){
+    
+            if ( productState.product == null ) return;
+    
+            ref.read( 
+              productFormProvider( productState.product! ).notifier
+            ).onFormSubmit()
+              .then( ( value ) {
+                if ( !value ) return;
+    
+                showSnackbar( context );
+              });
+          },
+          child: const Icon( Icons.save_as_outlined ),
+        ),
       ),
     );
   }
@@ -235,6 +251,7 @@ class _GenderSelector extends StatelessWidget {
         }).toList(), 
         selected: { selectedGender },
         onSelectionChanged: (newSelection) {
+          FocusScope.of( context ).unfocus();
           onGenderChanged( newSelection.first );
         },
       ),

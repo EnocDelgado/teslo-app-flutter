@@ -18,7 +18,7 @@ class ProductCard extends StatelessWidget {
         _ImagerViewer( images: product.images ),
 
         Text( product.title, textAlign: TextAlign.center ),
-        const SizedBox( height: 50 ),
+        const SizedBox( height: 20 ),
       ],
     );
   }

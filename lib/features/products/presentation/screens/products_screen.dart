@@ -30,7 +30,7 @@ class ProductsScreen extends StatelessWidget {
         label: const Text('New Product'),
         icon: const Icon( Icons.add ),
         onPressed: () {
-          context.push('/products/new');
+          context.push('/product/new');
         },
       ),
     );

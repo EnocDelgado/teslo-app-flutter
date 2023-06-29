@@ -11,6 +11,7 @@ import '../../../../../config/constants/environment.dart';
 //! 3 - StateNotfifierProvider
 final productFormProvider = StateNotifierProvider.autoDispose.family<ProducFormNotifier, ProductFormState, Product>( ( ref, product ) {
 
+  // final createUpdateCallback = ref.watch( productsRepositoryProvider ).createUpdateProduct;
   final createUpdateCallback = ref.watch( productsProvider.notifier ).createOrUpdateProduct;
 
   return ProducFormNotifier(
@@ -55,7 +56,7 @@ class ProducFormNotifier extends StateNotifier<ProductFormState> {
       "title": state.title.value,
       "price": state.price.value,
       "description":state.desciption,
-      "slug": state.slug,
+      "slug": state.slug.value,
       "stock": state.inStock.value,
       "sizes": state.sizes,
       "gender": state.gender,

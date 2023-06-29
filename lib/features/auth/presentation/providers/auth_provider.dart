@@ -7,11 +7,11 @@ import 'package:teslo_shop/features/shared/services/key_value_storage_impl.dart'
 
 final authProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) {
 
-  final authRepoository = AuthRepositoryImpl();
+  final authRepository = AuthRepositoryImpl();
   final keyValueStorage = KeyValueStorageServiceImpl();
   
   return AuthNotifier(
-    authRepository: authRepoository,
+    authRepository: authRepository,
     keyValueStorageService: keyValueStorage
   );
 });

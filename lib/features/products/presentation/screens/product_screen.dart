@@ -83,7 +83,13 @@ class _ProductView extends ConsumerWidget {
           ),
     
           const SizedBox( height: 10 ),
-          Center(child: Text( productForm.title.value, style: textStyles.titleSmall )),
+          Center(
+            child: Text( 
+            productForm.title.value, 
+            style: textStyles.titleSmall,
+            textAlign: TextAlign.center,
+            )
+          ),
           const SizedBox( height: 10 ),
           _ProductInformation( product: product ),
           
@@ -138,13 +144,13 @@ class _ProductInformation extends ConsumerWidget {
           const Text('Extras'),
 
           _SizeSelector(
-            selectedSizes: product.sizes,
+            selectedSizes: productForm.sizes,
             onSizesChanged: ref.read( productFormProvider( product ).notifier ).onSizeChanged,
           ),
           const SizedBox(height: 5 ),
 
           _GenderSelector( 
-            selectedGender: product.gender,
+            selectedGender: productForm.gender,
             onGenderChanged: ref.read( productFormProvider( product ).notifier ).onGenderChanged,
           ),
           
@@ -220,6 +226,8 @@ class _SizeSelector extends StatelessWidget {
 
 class _GenderSelector extends StatelessWidget {
   final String selectedGender;
+  final void Function( String selectedGender ) onGenderChanged;
+
   final List<String> genders = const['men','women','kid'];
   final List<IconData> genderIcons = const[
     Icons.man,
@@ -227,7 +235,6 @@ class _GenderSelector extends StatelessWidget {
     Icons.boy,
   ];
 
-  final void Function( String selectedGender ) onGenderChanged;
 
   const _GenderSelector({
     required this.selectedGender, 
